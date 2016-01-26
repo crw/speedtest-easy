@@ -7,7 +7,7 @@ from pprint import pprint
 import mysqlite as sql
 
 
-sqlite_file = 'speedtest.sqlite'
+TABLE_NAME = 'speedtest'
 
 
 def warning(*objs):
@@ -72,17 +72,28 @@ def from_stream(stream):
     return data
 
 
-if __name__ == "__main__":
-
-    db = sql.mysqlite()
-    data = from_stream(sys.stdin)
+def convert_log_to_sqlite(sqlite_filename, log_stream):
+    db = sql.mysqlite(sqlite_filename)
+    data = from_stream(log_stream)
     records = 0
     for datum in data:
         try:
-            db.insert('speedtest', datum)
+            db.insert(TABLE_NAME, datum)
             records += 1
         except sql.IntegrityError:
             warning('Error: Insert: ID already exists: {}'
                     .format(datum['start']))
     db.commit()
     print('{} records inserted!'.format(records))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        sqlite_filename = sys.argv[1]
+    else:
+        sqlite_filename = None
+    if len(sys.argv) > 2:
+        log_stream = open(sys.argv[2])
+    else:
+        log_stream = sys.stdin
+    convert_log_to_sqlite(sqlite_filename, log_stream)
