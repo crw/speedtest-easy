@@ -1,0 +1,26 @@
+{
+  "name": "speedtest-web",
+  "description": "Simple web interface to speedtest-cli.",
+  "main": "index.js",
+  "authors": [
+    "Craig Wright <craig@wright.name>"
+  ],
+  "license": "ISC",
+  "moduleType": [
+    "node"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chartist-plugin-tooltip": "~0.0.12",
+    "chartist": "~0.9.5",
+    "jquery": "~2.2.0"
+  }
+}
