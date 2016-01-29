@@ -27,8 +27,12 @@ router.get('/first', function (req, res) {
 
 
 router.get('/range', function (req, res) {
-  res.json({'message': 'Hello World!'});
+  sql = new speedtestSqlite(filename);
+  sql.range(req.query.start, req.query.end, function(err,rows) {
+    res.json(rows);
+  })
 });
+
 
 router.get('/all', function (req, res) {
   sql = new speedtestSqlite(filename);
@@ -36,7 +40,6 @@ router.get('/all', function (req, res) {
     res.json(rows);
   });
 });
-
 
 
 app.use('/api', router);

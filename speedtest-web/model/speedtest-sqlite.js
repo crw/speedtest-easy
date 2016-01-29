@@ -5,7 +5,7 @@ function speedtest_sqlite (filename) {
 	this.db = new sqlite3.Database(filename);
 }
 
-speedtest_sqlite.prototype.range = function(callback, start, end) {
+speedtest_sqlite.prototype.range = function(start, end, callback) {
 
 	var stmt = 'SELECT * FROM speedtest WHERE start >= ? AND end <= ?';
 	var query;

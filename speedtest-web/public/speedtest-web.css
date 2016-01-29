@@ -18,6 +18,12 @@
 .ct-series-b .ct-point {
   stroke: blue;
 }
+
+.data-error {
+  display: none;
+  font-size: 400%;
+}
+
 #day {
 	display: none;
 }
