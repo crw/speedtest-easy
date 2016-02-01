@@ -55,10 +55,10 @@
                 success: function (data) {
                     getFirstEntry.cache = data;
                     callback(data);
-                }.bind(this),
+                },
                 error: function (xhr, status, err) {
                     console.error('/api/first', status, err.toString());
-                }.bind(this)
+                }
             });
         }
     }
@@ -214,10 +214,10 @@
             },
             dataType: 'json',
             type: 'GET',
-            success: successfn.bind(this),
+            success: successfn,
             error: function(xhr, status, err) {
                 console.error(data_uri, status, err.toString());
-            }.bind(this)
+            }
         });
     }
 
