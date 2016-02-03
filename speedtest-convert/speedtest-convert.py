@@ -88,6 +88,12 @@ def convert_log_to_sqlite(sqlite_filename, log_stream):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print("Usage: python speedtest-convert.py <sqlite_filename> <log_filename>")
+        print()
+        print("Note: if the log filename is excluded, the script will read from STDIN.")
+        print()
+        exit()
     if len(sys.argv) > 1:
         sqlite_filename = sys.argv[1]
     else:
