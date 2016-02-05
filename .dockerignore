@@ -1,3 +1,5 @@
-node_modules
-bower_components
+web/node_modules
+web/bower_components
+*/.DS_Store
+convert/env
 
