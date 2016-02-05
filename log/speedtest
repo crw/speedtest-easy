@@ -1,8 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
-export OUTFILE=/var/log/speedtest
+# DB_FILENAME is the location of the sqlite file
+# LOG_FILENAME is the location of the log file
+# KEEP_LOG determines if we keep the log file after conversion to sqlite.
 
-echo "-----Start: `date -u -Iseconds`" >> $OUTFILE
-speedtest-cli >> $OUTFILE
-echo "-----End: `date -u -Iseconds`" >> $OUTFILE
 
+echo "-----Start: `date -u -Iseconds`" >> $LOG_FILENAME
+speedtest-cli >> $LOG_FILENAME
+echo "-----End: `date -u -Iseconds`" >> $LOG_FILENAME
+
+cd /speedtest-easy/convert/ && python speedtest-convert.py $DB_FILENAME $LOG_FILENAME
+
+if [ $KEEP_LOG -eq 0 ]
+then
+	rm $LOG_FILENAME
+fi
