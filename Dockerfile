@@ -10,8 +10,8 @@ RUN service cron start
 
 RUN mkdir /speedtest-easy
 
-ADD ./speedtest-web /speedtest-easy/web
-ADD ./speedtest-convert /speedtest-easy/convert
+ADD ./web /speedtest-easy/web
+ADD ./convert /speedtest-easy/convert
 
 RUN cd /speedtest-easy/web && \
 	npm install && \
