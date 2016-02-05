@@ -8,7 +8,7 @@ var SpeedtestSqlite = require('./model/speedtest-sqlite.js');
 
 
 var port = process.env.PORT || 3000;
-var filename = process.env.DB_FILENAME || '../speedtest.sqlite';
+var filename = process.env.DB_FILENAME || 'speedtest.sqlite';
 
 var sql = new SpeedtestSqlite(filename);
 
@@ -20,7 +20,21 @@ app.use(express.static('bower_components'));
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    res.json({'message': 'Hello World!'});
+    res.json({resources: [
+        {
+            resource: '/first',
+            desc: 'Returns the first, presumably earliest, row from the database.'
+        },
+        {
+            resource: '/range?start=<ISO_TIMESTAMP>&end=<ISO_TIMESTAMP>',
+            desc: 'Returns a range of rows from the database, filtering on the ' +
+                    '`start` timestamp. This is a simple text search.'
+        },
+        {
+            resource: '/all',
+            desc: 'Returns all rows from the database.'
+        }
+    ]});
 });
 
 
