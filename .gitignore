@@ -5,4 +5,5 @@ node_modules
 *.pyc
 *.log
 env
+.DS_Store
 
