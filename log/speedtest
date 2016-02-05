@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export OUTFILE=/var/log/speedtest
+
+echo "-----Start: `date -u -Iseconds`" >> $OUTFILE
+speedtest-cli >> $OUTFILE
+echo "-----End: `date -u -Iseconds`" >> $OUTFILE
+
