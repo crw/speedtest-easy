@@ -2,7 +2,6 @@ from __future__ import print_function
 import re
 import sys
 import sqlite3
-from pprint import pprint
 
 import mysqlite as sql
 
