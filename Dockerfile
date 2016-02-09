@@ -12,20 +12,23 @@ ENV PORT=3000 \
 
 RUN apt-get update \
 	&& apt-get install -y \
+		supervisor \
 		cron \
+		anacron \
 		python-pip \
 	&& pip install \
 		speedtest-cli \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* \
+	&& touch /var/log/cron \
+	&& mkdir /speedtest-easy
 
-COPY /log/speedtest /etc/cron.hourly/speedtest
+COPY /log/speedtest       /etc/cron.hourly/speedtest
+COPY /log/supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN service cron start
+ADD ./log/run_cron.py /root/run_cron.py
 
-RUN mkdir /speedtest-easy
-
-ADD ./web /speedtest-easy/web
+ADD ./web     /speedtest-easy/web
 ADD ./convert /speedtest-easy/convert
 
 RUN cd /speedtest-easy/web && \
@@ -37,4 +40,4 @@ WORKDIR /speedtest-easy/web
 
 EXPOSE $PORT
 
-CMD ["node", "speedtest-web.js"]
+CMD ["/usr/bin/supervisord"]
