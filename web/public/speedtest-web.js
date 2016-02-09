@@ -145,7 +145,6 @@
                 day_map[date].up.push(parseInt(obj.up, 10));
                 day_map[date].report.push(obj);
             });
-            console.log(day_map);
             Object.keys(day_map).forEach(function (day, idx, arr) {
                 chartist_data.labels.push(new Date(day_map[day].report[0].start).getDate());
                 chartist_data.series[0].push({
@@ -188,7 +187,6 @@
                 var chartist_data = { labels: [], series: [[], []] };
 
                 if (data.length === 0) {
-                    console.log('Query returned no data: ', data);
                     $('.data-error').css('display', 'block');
                 } else {
                     $('.data-error').css('display', 'none');
