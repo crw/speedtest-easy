@@ -6,9 +6,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# DB_FILENAME is the location of the sqlite file
-# LOG_FILENAME is the location of the log file
-# KEEP_LOG determines if we keep the log file after conversion to sqlite.
+# speedtest: a cron script for running the speedtest-cli on an hourly basis.
+#
+# This script could conceivably be run daily or more frequently, however
+# the web ui is designed to process hourly data.
+#
+# The following values are set in /etc/environment, configurable via Docker env:
+#     DB_FILENAME: location of the sqlite file
+#     LOG_FILENAME: location of the log file
+#     KEEP_LOG: determines if we keep the log file after conversion to sqlite.
 
 
 echo "-----Start: `date -u -Iseconds`" >> $LOG_FILENAME

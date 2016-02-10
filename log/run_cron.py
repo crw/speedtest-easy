@@ -6,8 +6,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# run-cron.py
-# Writes /etc/environment and runs cron
+""" run-cron.py: Writes /etc/environment and runs cron
+
+This is a way to get environment variables from Docker into the cron
+script. Given that every user will have these set regardless, setting
+in /etc/environment seems harmless.
+"""
 
 import os
 from subprocess import call

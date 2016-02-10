@@ -8,52 +8,59 @@
 import sqlite3
 
 class IntegrityError(sqlite3.IntegrityError):
+    """Wrapper allows the calling script to not need to import sqlite3."""
     pass
 
 
 class mysqlite(object):
+    """Simple sqlite interface."""
 
-    filename = 'speedtest.sqlite'
+    filename = None
+    schema = None
     conn = None
 
-    schema = (
-        { 'speedtest': [
-            ('start',     'TEXT', 'PRIMARY KEY'),
-            ('end',       'TEXT', ''),
-            ('up',        'TEXT', ''),
-            ('down',      'TEXT', ''),
-            ('hostname',  'TEXT', ''),
-            ('location',  'TEXT', ''),
-            ('distance',  'TEXT', ''),
-            ('latency',   'TEXT', ''),
-        ]}
-    )
 
+    def __init__(self, filename, schema):
+        """Open and initializes a sqlite database.
 
-    def __init__(self, filename=None):
+        filename: str; location on disk of the sqlite db.
+        schema: tuple of dict; schema definition for the sqlite db.
+            ex. ( { tablename: [col_name, col_type, modifiers], [...] }, {...} )
+        """
         if filename:
             self.filename = filename
+        if schema:
+            self.schema = schema
         self.open()
         self.initialize()
 
 
     def open(self):
+        """Open a connection to a sqlite database (creates a connection object)
+        """
         if self.conn:
             self.close()
         self.conn = sqlite3.connect(self.filename)
 
 
     def commit(self):
+        """Commits outstanding transaction."""
         if self.conn:
             self.conn.commit()
 
 
     def close(self):
+        """Closes the connection to the sqlite database."""
         if self.conn:
             self.conn.close()
 
 
     def initialize(self):
+        """Creates tables from schema, if not already created.
+
+        No attempt is made to ALTER TABLE should the schema change. If the
+        table name is found, it is simply not created.
+        """
         c = self.conn.cursor()
         for table_name in self.schema:
             columns = []
@@ -66,6 +73,11 @@ class mysqlite(object):
 
 
     def insert(self, table, data):
+        """Inserts one row of data into the sqlite database.
+
+        table: string; name of the table into which to insert.
+        data: dict; keys are column names, values are row values.
+        """
         c = self.conn.cursor()
         cols_arr = []
         vals_arr = []

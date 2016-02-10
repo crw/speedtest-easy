@@ -12,26 +12,47 @@ import sqlite3
 
 import mysqlite as sql
 
-
+"""TABLE_NAME and SCHEMA define the sqlite database."""
 TABLE_NAME = 'speedtest'
-
+SCHEMA = (
+        { TABLE_NAME: [
+            ('start',     'TEXT', 'PRIMARY KEY'),
+            ('end',       'TEXT', ''),
+            ('up',        'TEXT', ''),
+            ('down',      'TEXT', ''),
+            ('hostname',  'TEXT', ''),
+            ('location',  'TEXT', ''),
+            ('distance',  'TEXT', ''),
+            ('latency',   'TEXT', ''),
+        ]}
+    )
 
 def warning(*objs):
+    """Wrapper around print to handle logging errors to STDERR."""
     print("WARNING: ", *objs, file=sys.stderr)
 
 
 def convert_datetime(line):
+    """Processes lines with datetimes, returning the ISO8601 string."""
     garbage, datetime = line.split(' ')
     return datetime
 
 
 def convert_speed(line):
+    """Processes the line with a speed number in it (up or down).
+
+    Return value is always in kbps.
+    """
     garbage, speed, unit = line.split(' ')
     multiplier = 1000 if unit == 'Mbit/s' else 1
     return int(float(speed)*multiplier)
 
 
 def convert_host(line):
+    """Processes the line with host information.
+
+    Returns a dict, as the host line actually contains four bits of info.
+    """
     m = re.match(r"Hosted by (.+) \((.+)\) \[(.+)\]\: (.+) ms", line)
     hostname, location, distance, latency = m.groups()
     return {
@@ -43,6 +64,14 @@ def convert_host(line):
 
 
 def from_stream(stream):
+    """Processes a file or stream of speedtest log data.
+
+    Since every line is essentially unique and non-programmatic output, we
+    need to do detection and conversion differently for every line. We also
+    need to keep track of matching start and end times.
+
+    Warns if a sequence of lines is missing any data and skips that sequence.
+    """
     data = []
     output = {}
     depth = 0
@@ -79,7 +108,9 @@ def from_stream(stream):
 
 
 def convert_log_to_sqlite(sqlite_filename, log_stream):
-    db = sql.mysqlite(sqlite_filename)
+    """Handles farming out log conversion and writing the data to the database.
+    """
+    db = sql.mysqlite(sqlite_filename, SCHEMA)
     data = from_stream(log_stream)
     records = 0
     for datum in data:
@@ -94,6 +125,7 @@ def convert_log_to_sqlite(sqlite_filename, log_stream):
 
 
 if __name__ == "__main__":
+    """Manages CLI args and preps for execution."""
     if len(sys.argv) == 1:
         print("Usage: python speedtest-convert.py <sqlite_filename> <log_filename>")
         print()
