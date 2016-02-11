@@ -32,6 +32,10 @@
   font-size: 400%;
 }
 
+.control {
+  font-size: 100%;
+}
+
 #day {
 	display: none;
 }
