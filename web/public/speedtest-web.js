@@ -14,8 +14,13 @@
 (function () {
     "use strict";
 
+    /**
+     * Calculates the median of an array of number values.
+     * @see https://gist.github.com/caseyjustus/1166258
+     * @function
+     * @param {array} values int or float.
+     */
     function median(values) {
-        // @see https://gist.github.com/caseyjustus/1166258
         values.sort(function (a, b) { return a - b; });
 
         var half = Math.floor(values.length / 2);
@@ -27,6 +32,12 @@
     }
 
 
+    /**
+     * Returns month as an int, range 0 to 11.
+     * @function
+     * @param {string} mon string representation of the month.
+     * return {int}
+     */
     function getMonthFromString(mon) {
 
         var d = Date.parse(mon + "1, 2012");
@@ -37,6 +48,12 @@
     }
 
 
+    /**
+     * Inspects the various page controls and returns an object with their
+     * current settings.
+     * @function
+     * @return {object}
+     */
     function getCurrentOptions() {
         var options = {},
             yearmonth = $('#specificity').val().split(' ');
@@ -53,6 +70,12 @@
     }
 
 
+    /**
+     * Executes an ajax request to get the first database entry and calls a
+     * callback with the results.
+     * @function
+     * @param {function} callback called with result data from successful request.
+     */
     function getFirstEntry(callback) {
         if (getFirstEntry.cache) {
             callback(getFirstEntry.cache);
@@ -73,6 +96,12 @@
     }
 
 
+    /**
+     * Generates the correct set of month values for the Month drop-down as
+     * appropriate for the year and start-of-data context.
+     * @function
+     * @param {function} callback called with no arguments after completion.
+     */
     function generateMonthValues(callback) {
         getFirstEntry(function (data) {
             var monthName = [
@@ -101,7 +130,14 @@
         });
     }
 
-    function generateDayValues(year, month) {
+    /**
+     * Generates the correct set of day values for the Day drop-down as
+     * appropriate for the year, month, start- and end-of-data context.
+     * @function
+     * @param {int} year selected 4-digit year value
+     * @param {int} month selected int month value (0..11)
+     */
+   function generateDayValues(year, month) {
 
         getFirstEntry(function (data) {
             var daysInMonth, i, firstDate;
@@ -128,6 +164,13 @@
     }
 
 
+    /**
+     * Chartist-plugin-tooltip decoraction function; decorates the chart tooltips.
+     * @function
+     * @param {str} meta Meta-data for the point being observed. Chartist-serialized
+                         string, decodes to an array.
+     * @param {int} value The value of the data point being observed.
+     */
     function decorateToolTip(meta, value) {
         var output = "";
         value = (!value) ? "0" : value;
@@ -137,7 +180,16 @@
         return output;
     }
 
-
+    /**
+     * Converts data from the JSON representation to the format needed for Chartist.
+     * For monthly values, we take the median of the hourly data.
+     * For the day values, we naively assume there is only one data point per hour
+     *     and that the data is delivered sorted by time, ascending.
+     * @todo Sort data
+     * @todo Genericize the median algorithm to apply to any specificity (minute, hour, month, day, year)
+     * @function
+     * @param {array} data delivered directly from the ajax response.
+     */
     function processData(data) {
         var opts = getCurrentOptions(),
             chartist_data = { labels: [], series: [[], []] },
@@ -188,6 +240,12 @@
     }
 
 
+    /**
+     * Draws the big chart based on a chosen starting and ending time.
+     * @function
+     * @param {string} start ISO8601 datetime fragment. ex. 2016-02-01
+     * @param {string} end ISO8601 datetime fragment. ex. 2016-02-02
+     */
     function drawChart(start, end) {
 
         var data_uri = '/api/range',
@@ -229,6 +287,10 @@
     }
 
 
+    /**
+     * Redraws the menus based on current selected option values.
+     * @function
+     */
     function updateMenus() {
         var options;
         if ($('#granularity').val() === 'day') {
@@ -241,11 +303,21 @@
     }
 
 
+    /**
+     * Event wrapper for updateMenus()
+     * @function
+     * @param {object} e Event object
+     */
     function updateMenusEvent(e) {
         updateMenus();
     }
 
 
+    /**
+     * Event called when changing dropdown menu items. Pulls options and redraws chart.
+     * @function
+     * @param {object} e Event object
+     */
     function updateChartEvent(e) {
         var opts = getCurrentOptions(), start, end;
 
@@ -261,6 +333,11 @@
     }
 
 
+    /**
+     * Bootstrapper for a new page load. Draws the menus, gets the initial data,
+     * draws the initial chart, registers event handlers.
+     *
+     */
     $(document).ready(function () {
 
         generateMonthValues(function () {
