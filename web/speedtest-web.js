@@ -27,6 +27,9 @@ app.use(express.static('bower_components'));
 
 var router = express.Router();
 
+/**
+ * Ridiculous attempt at a self-documenting API. HATEOAS cries.
+ */
 router.get('/', function (req, res) {
     res.json({resources: [
         {
@@ -45,7 +48,10 @@ router.get('/', function (req, res) {
     ]});
 });
 
-
+/**
+ * Returns the first row in the database, the premise being this is also
+ * the earliest row. Not necessarily true, but most likely true.
+ */
 router.get('/first', function (req, res) {
     sql.first(function (err, row) {
         res.json(row);
@@ -53,6 +59,10 @@ router.get('/first', function (req, res) {
 });
 
 
+/**
+ * Returns a range of rows between two dates. See the sqlite interface for
+ * more information about argument format. This is the workhorse endpoint.
+ */
 router.get('/range', function (req, res) {
     sql.range(req.query.start, req.query.end, function (err, rows) {
         res.json(rows);
@@ -60,6 +70,9 @@ router.get('/range', function (req, res) {
 });
 
 
+/**
+ * Returns a all rows.
+ */
 router.get('/all', function (req, res) {
     sql.all(function (err, rows) {
         res.json(rows);
