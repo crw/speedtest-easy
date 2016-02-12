@@ -1,9 +1,6 @@
 bower_components
 node_modules
-*.db
-*.sqlite
 *.pyc
-*.log
 env
 .DS_Store
-
+*.sublime-*
