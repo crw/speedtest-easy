@@ -14,8 +14,8 @@ ENV PORT=3000 \
 	KEEP_LOG=0 \
 	# To persist speedtest data across containers, set these to write to a
 	# mounted volume rather than keeping the defaults.
-	DB_FILENAME=/var/log/speedtest.sqlite \
-	LOG_FILENAME=/var/log/speedtest.log
+	DB_FILENAME=/var/data/speedtest.sqlite \
+	LOG_FILENAME=/var/data/speedtest.log
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -28,7 +28,7 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& touch /var/log/cron \
-	&& mkdir /speedtest-easy
+	&& mkdir /speedtest-easy /var/data
 
 COPY /log/speedtest       /etc/cron.hourly/speedtest
 COPY /log/supervisor.conf /etc/supervisor/conf.d/supervisord.conf
@@ -44,7 +44,7 @@ RUN cd /speedtest-easy/web && \
 	npm install -g bower && \
 	bower --allow-root install
 
-WORKDIR /speedtest-easy/web
+VOLUME /var/data
 
 EXPOSE $PORT
 
