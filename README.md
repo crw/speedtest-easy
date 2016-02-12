@@ -1,5 +1,5 @@
 # speedtest-easy
-Easy hourly speedtest results, with a simple web chart, easily installable via a Docker container.
+Hourly speedtest results, with a simple web-based chart, installed via a Docker container.
 
 ## Synopsis
 
@@ -9,10 +9,19 @@ Installing this project enables two bits of functionality: the hourly collection
 
 ```bash
 docker pull raitos/speedtest-easy
-docker run -e DB_FILENAME=/speedtest-easy/sample/speedtest.sqlite -p 3000:3000 raitos/speedtest-easy
+docker run -d -e DB_FILENAME=/speedtest-easy/sample/speedtest.sqlite -p 3000:3000 raitos/speedtest-easy
 ```
 
-This will run the container image using the sample dataset. This should allow you to poke around with the web interface on <http://localhost:3000/>. The sample dataset has date from around 27-Dec-2015 to 08-Feb-2016. Any days outside of that window will display the error "No Data."
+This will run the container image using the sample dataset. This should allow you to poke around with the web interface on http://your_docker_host:3000/. The sample dataset has date from around 27-Dec-2015 to 08-Feb-2016. Any days outside of that window will display the error "No Data." Note, if you allow this container to keep running, it will start logging data into the sample data database. This is meant as a sample exercise only.
+
+To stop the container:
+
+```
+docker stop speedtest-easy
+
+## And to remove (this will delete all data within the container!)
+docker rm speedtest-easy
+```
 
 ## Motivation
 
@@ -29,10 +38,14 @@ docker run -d -p 3000:3000 -name speedtest-easy raitos/speedtest-easy
 
 The following Docker environment variables can be set:
 
-DB_FILENAME (var/data/speedtest.sqlite): the location of the sqlite database.
-LOG_FILENAME (/var/data/speedtest.log): the location of the raw speedtest-cli logs
-KEEP_LOG (0): if 0, logs are removed after use. Any other value, they are kept.
-PORT (3000): Port through which to expose the web application.
+* **DB_FILENAME** _(var/data/speedtest.sqlite)_: the location of the sqlite database.
+* **LOG_FILENAME** _(/var/data/speedtest.log)_: the location of the raw speedtest-cli logs
+* **KEEP_LOG** _(0)_: if 0, logs are removed after use. Any other value, they are kept.
+* **PORT** _(3000)_: Port through which to expose the web application.
+
+#### Maintain your data with volumes
+
+I recommend mounting a volume so that you can maintain your speedtest data between the execution of different containers. Just add `-v /my/local/folder:/var/data` to the `docker run` command. If you do not do this, all collected speedtest data will be deleted if you remove the container.
 
 To manually run a speedtest:
 
