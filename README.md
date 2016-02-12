@@ -9,7 +9,7 @@ Installing this project enables two bits of functionality: the hourly collection
 
 ```bash
 docker pull raitos/speedtest-easy
-docker run -d -e DB_FILENAME=/speedtest-easy/sample/speedtest.sqlite -p 3000:3000 raitos/speedtest-easy
+docker run -d -e DB_FILENAME=/speedtest-easy/sample/speedtest.sqlite -p 3000:3000 -name speedtest-easy raitos/speedtest-easy
 ```
 
 This will run the container image using the sample dataset. This should allow you to poke around with the web interface on http://your_docker_host:3000/. The sample dataset has date from around 27-Dec-2015 to 08-Feb-2016. Any days outside of that window will display the error "No Data." Note, if you allow this container to keep running, it will start logging data into the sample data database. This is meant as a sample exercise only.
@@ -61,11 +61,10 @@ The node site can be run as follows:
 
 ```
 ## Install dependencies (first time)
-cd speedtest-web
-npm install && npm install -g bower && bower install
+cd speedtest-web && npm install && npm install -g bower && bower install
 
 ## Run the website
-node speedtest-web.js
+cd speedtest-web && node speedtest-web.js
 ```
 
 ## Methodology
