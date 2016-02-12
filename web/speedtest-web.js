@@ -16,7 +16,7 @@ var SpeedtestSqlite = require('./model/speedtest-sqlite.js');
 
 
 var port = process.env.PORT || 3000;
-var filename = process.env.DB_FILENAME || '../example/speedtest.sqlite';
+var filename = process.env.DB_FILENAME || '../sample/speedtest.sqlite';
 
 var sql = new SpeedtestSqlite(filename);
 

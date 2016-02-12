@@ -37,6 +37,7 @@ ADD ./log/run_cron.py /root/run_cron.py
 
 ADD ./web     /speedtest-easy/web
 ADD ./convert /speedtest-easy/convert
+ADD ./sample  /speedtest-easy/sample
 
 RUN cd /speedtest-easy/web && \
 	npm install && \
